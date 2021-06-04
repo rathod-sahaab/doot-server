@@ -1,0 +1,42 @@
+# docker-compose.dev.yml
+version: "3.4"
+services:
+  app:
+    build: .
+    volumes:
+      - /app/node_modules # Does not mount node_modules folder from local machine
+      - ./src:/app/src # Mount local machine folder to container
+    container_name: doot_server_dev
+    links:
+      - postgres
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/dootdev
+    depends_on:
+      - postgres
+    tty: true
+    networks:
+      - doot_dev_net
+    ports:
+      - "3000:3000"
+
+  postgres:
+    image: postgres:alpine
+    volumes:
+      - doot_dev_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      PGPASSWORD: "${PGPASSWORD}"
+
+    networks:
+      - doot_dev_net
+    ports:
+      - "5432:5432"
+
+networks:
+  doot_dev_net:
+    driver: bridge
+
+volumes:
+  doot_dev_db:
+    driver: local
