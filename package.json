@@ -5,7 +5,8 @@
   "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon"
+    "start": "nodemon",
+    "develop": "docker-compose -f docker-compose.dev.yaml --env-file .env.dev up"
   },
   "keywords": [
     "sms"
