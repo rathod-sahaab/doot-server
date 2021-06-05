@@ -5,9 +5,9 @@ info:
   description: An API to send messages programatically from your phones.
 
 paths:
-  /mailer/send:
+  /mailer/message:
     post:
-      summary: Sends message to the Number
+      summary: Sends a message to the Number
       requestBody:
         content:
           application/json:
@@ -72,8 +72,17 @@ paths:
 components:
   schemas:
     Phone:
-      type: string
-      example: "+91 1234567890"
+      type: object
+      required:
+        - country
+        - num
+      properties:
+        country:
+          type: integer
+          example: 91
+        num:
+          type: string
+          example: "1234567890"
     Text:
       type: string
       example: "Hi! how are you?"
