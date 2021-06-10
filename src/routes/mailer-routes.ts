@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { getConnection } from "typeorm";
 import { Message } from "../entity/Message";
-import { Phone } from "../entity/Phone";
+import { Phone } from "../entity/embed/Phone";
 import { BroadcastMessage, SendMessageData } from "../models/MailerTypes";
 
 const mailerRoutes = Router();

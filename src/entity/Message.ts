@@ -1,7 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { Carrier } from "./Carrier";
 import { Mailer } from "./Mailers";
-import { Phone } from "./Phone";
+import { Phone } from "./embed/Phone";
 
 @Entity()
 export class Message {
