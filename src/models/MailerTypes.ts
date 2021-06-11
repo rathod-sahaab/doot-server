@@ -1,5 +1,9 @@
 import Phone from "./Phone";
 
+export class MailerRegisterData {
+  username: string;
+}
+
 export class BroadcastMessage {
   phones: Phone[];
   text: string;

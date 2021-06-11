@@ -7,7 +7,7 @@ export class Carrier {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({unique:true})
   username: string;
 
   @OneToMany(() => Message, (message: Message) => message.carrier)
