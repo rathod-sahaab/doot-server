@@ -8,6 +8,7 @@ import {
   SendMessageData,
 } from "../models/MailerTypes";
 import { Mailer } from "../entity/Mailers";
+import { User } from "../entity/embed/User";
 
 const mailerRoutes = Router();
 
@@ -19,6 +20,12 @@ mailerRoutes.post("/", async (req, res) => {
       error: "No username field in request.",
     });
   }
+  if (!data.email) {
+    res.statusCode = 400;
+    res.json({
+      error: "No email field in request.",
+    });
+  }
 
   const dbConnection = getConnection();
   const repository = dbConnection.getRepository(Mailer);
@@ -26,14 +33,20 @@ mailerRoutes.post("/", async (req, res) => {
   try {
     // where username = :username or email = :email
     const existingMailer = await repository.findOne({
-      where: [{ username: data.username }],
+      where: [
+        { user: { username: data.username } },
+        { user: { email: data.email } },
+      ],
     });
 
     if (existingMailer) {
       res.statusCode = 400;
 
-      if (existingMailer.username === data.username) {
+      if (existingMailer.user.username === data.username) {
         res.json({ error: "Username already taken" });
+      }
+      if (existingMailer.user.email === data.email) {
+        res.json({ error: "email already taken" });
       }
       // TODO: Add email
     }
@@ -42,7 +55,10 @@ mailerRoutes.post("/", async (req, res) => {
   }
 
   const mailer = new Mailer();
-  mailer.username = data.username;
+  mailer.user = new User();
+  mailer.user.username = data.username;
+  mailer.user.email = data.email;
+  mailer.user.passwordHash = data.password;
 
   try {
     await dbConnection.manager.save(mailer);

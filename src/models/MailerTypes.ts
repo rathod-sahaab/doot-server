@@ -2,6 +2,8 @@ import Phone from "./Phone";
 
 export class MailerRegisterData {
   username: string;
+  email: string;
+  password: string;
 }
 
 export class BroadcastMessage {
