@@ -23,30 +23,30 @@ mailerRoutes.post("/", async (req, res) => {
   const dbConnection = getConnection();
   const repository = dbConnection.getRepository(Mailer);
 
+  let existingMailer: Mailer | undefined;
   try {
     // where username = :username or email = :email
-    const existingMailer = await repository.findOne({
+    existingMailer = await repository.findOne({
       where: [{ username: data.username }],
     });
-
-    if (existingMailer) {
-      res.statusCode = 400;
-
-      if (existingMailer.username === data.username) {
-        res.json({ error: "Username already taken" });
-      }
-      // TODO: Add email
-    }
   } catch (err) {
     res.sendStatus(500);
+  }
+
+  if (existingMailer) {
+    res.statusCode = 400;
+
+    if (existingMailer.username === data.username) {
+      res.json({ error: "Username already taken" });
+    }
   }
 
   const mailer = new Mailer();
   mailer.username = data.username;
 
   try {
-    await dbConnection.manager.save(mailer);
-    res.sendStatus(200);
+    const savedMailer = await dbConnection.manager.save(mailer);
+    res.sendStatus(200).json({ id: savedMailer.id });
   } catch (err) {
     res.sendStatus(500);
   }
