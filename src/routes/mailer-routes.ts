@@ -14,8 +14,7 @@ const mailerRoutes = Router();
 mailerRoutes.post("/", async (req, res) => {
   const data = req.body as MailerRegisterData;
   if (!data.username) {
-    res.statusCode = 400;
-    res.json({
+    res.status(400).json({
       error: "No username field in request.",
     });
   }
@@ -46,7 +45,7 @@ mailerRoutes.post("/", async (req, res) => {
 
   try {
     const savedMailer = await dbConnection.manager.save(mailer);
-    res.sendStatus(200).json({ id: savedMailer.id });
+    res.status(200).json({ id: savedMailer.id });
   } catch (err) {
     res.sendStatus(500);
   }
