@@ -54,12 +54,25 @@ mailerRoutes.post("/", async (req, res) => {
 mailerRoutes.post("/message", async (req, res) => {
   const data = req.body as SendMessageData;
 
-  if (!data.phone || !data.phone.num || !data.phone.country || !data.text) {
-    res.statusCode = 400;
-    res.end();
+  if (
+    !data.phone ||
+    !data.phone.num ||
+    !data.phone.country ||
+    !data.text ||
+    !data.mailerId
+  ) {
+    res.sendStatus(400);
+    return;
   }
 
   const dbConnection = getConnection();
+  const mailerRepository = dbConnection.getRepository(Mailer);
+
+  let mailer = await mailerRepository.findOne(data.mailerId);
+  if (!mailer) {
+    res.status(400).json({ error: "Mailer with given 'id' doesn't exist" });
+    return;
+  }
 
   const message = new Message();
   message.phone = new Phone();
@@ -67,35 +80,55 @@ mailerRoutes.post("/message", async (req, res) => {
   message.phone.num = data.phone.num;
   message.phone.country = data.phone.country;
   message.text = data.text;
+  message.mailer = mailer;
 
-  await dbConnection.manager.save(message);
-
-  res.statusCode = 200;
-  res.json({
-    success: true,
-    data: data,
-  });
+  try {
+    const createdMessage = await dbConnection.manager.save(message);
+    res.status(200).json({
+      id: createdMessage.id,
+      phone: createdMessage.phone,
+      text: createdMessage.text,
+    });
+  } catch (err) {
+    res.sendStatus(500);
+  }
 });
 
 mailerRoutes.post("/broadcast", async (req, res) => {
   const data = req.body as BroadcastMessage;
 
+  if (!data.mailerId || !data.phones || !data.text) {
+    res.status(400).json({
+      error: "Missing field(s)",
+    });
+  }
+
   const dbConnection = getConnection();
+  const mailerRepository = dbConnection.getRepository(Mailer);
+
+  let mailer = await mailerRepository.findOne(data.mailerId);
+  if (!mailer) {
+    res.status(400).json({ error: "Mailer with given 'id' doesn't exist" });
+    return;
+  }
 
   const text = data.text;
 
   data.phones.map(async (phone: Phone) => {
     const message = new Message();
 
-    data.phones as Phone[];
     message.phone = new Phone();
-
     message.phone.num = phone.num;
     message.phone.country = phone.country;
 
     message.text = text;
 
-    await dbConnection.manager.save(message);
+    try {
+      await dbConnection.manager.save(message);
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
   });
 
   res.json({

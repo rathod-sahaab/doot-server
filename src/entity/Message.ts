@@ -14,12 +14,10 @@ export class Message {
   @Column()
   text: string;
 
-  @Column({default: false})
+  @Column({ default: false })
   sent: boolean;
 
-  @ManyToOne(() => Mailer, (mailer: Mailer) => mailer.messages, {
-    nullable: true,
-  })
+  @ManyToOne(() => Mailer, (mailer: Mailer) => mailer.messages)
   mailer: Mailer;
 
   @ManyToOne(() => Carrier, (carrier: Carrier) => carrier.messages, {

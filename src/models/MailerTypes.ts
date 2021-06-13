@@ -5,11 +5,13 @@ export class MailerRegisterData {
 }
 
 export class BroadcastMessage {
+  mailerId: number;
   phones: Phone[];
   text: string;
 }
 
 export class SendMessageData {
+  mailerId: number;
   phone: Phone;
   text: string;
 }
