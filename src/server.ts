@@ -7,6 +7,7 @@ import { Carrier } from "./entity/Carrier";
 import { Message } from "./entity/Message";
 import mailerRoutes from "./routes/mailer-routes";
 import carrierRoutes from "./routes/carrier-routes";
+import { CarrierMailer } from "./entity/CarrierMailer";
 
 const app = express();
 
@@ -16,7 +17,7 @@ async function main() {
     url: process.env.DATABASE_URL,
     logging: true,
     synchronize: true,
-    entities: [Mailer, Carrier, Message],
+    entities: [Carrier, CarrierMailer, Mailer, Message],
   });
 
   app.use(express.json());

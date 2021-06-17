@@ -2,15 +2,14 @@ import { Router } from "express";
 import { getConnection } from "typeorm";
 import { Message } from "../entity/Message";
 import { Phone } from "../entity/embed/Phone";
-import {
-  BroadcastMessage,
-  MailerRegisterData,
-  SendMessageData,
-} from "../models/MailerTypes";
 import { Mailer } from "../entity/Mailers";
+import { CarrierMailer, CarrierMailerRelation } from "../entity/CarrierMailer";
 
 const mailerRoutes = Router();
 
+export class MailerRegisterData {
+  username: string;
+}
 mailerRoutes.post("/", async (req, res) => {
   const data = req.body as MailerRegisterData;
   if (!data.username) {
@@ -51,6 +50,86 @@ mailerRoutes.post("/", async (req, res) => {
   }
 });
 
+/**
+ * returns connection request
+ */
+class GetCarrierRequestData {
+  id: number;
+}
+mailerRoutes.get("/requests", async (req, res) => {
+  const data = req.body as GetCarrierRequestData;
+
+  const result = await CarrierMailer.find({
+    where: {
+      mailerId: data.id,
+      relationStatus: CarrierMailerRelation.REQUEST_BY_CARRIER,
+    },
+    select: ["relationStatus"],
+    join: {
+      alias: "cm",
+      innerJoinAndSelect: {
+        carrier: "cm.carrier",
+      },
+    },
+  });
+
+  res.json({ requests: result });
+});
+
+class AcceptRequestData {
+  mailerId: number;
+  carrierId: number;
+}
+mailerRoutes.put("/request/accept", async (req, res) => {
+  const data = req.body as AcceptRequestData;
+
+  let carrierMailer = await CarrierMailer.findOne({
+    mailerId: data.mailerId,
+    carrierId: data.carrierId,
+    relationStatus: CarrierMailerRelation.REQUEST_BY_CARRIER,
+  });
+
+  if (!carrierMailer) {
+    res
+      .status(404)
+      .json({ errors: ["Request not found! and hence can't be accepted"] });
+    return;
+  }
+  // accept request
+  carrierMailer.relationStatus = CarrierMailerRelation.CONNECTED;
+  const { carrierId, mailerId, relationStatus } = await carrierMailer.save();
+
+  res.json({ carrierId, mailerId, relationStatus });
+});
+
+class GetCarriersData {
+  id: number;
+}
+mailerRoutes.get("/carriers", async (req, res) => {
+  const data = req.body as GetCarriersData;
+
+  const carriers = await CarrierMailer.find({
+    where: {
+      mailerId: data.id,
+      relationStatus: CarrierMailerRelation.CONNECTED,
+    },
+    select: ["relationStatus"],
+    join: {
+      alias: "cm",
+      innerJoinAndSelect: {
+        carrier: "cm.carrier",
+      },
+    },
+  });
+
+  res.json({ carriers });
+});
+
+export class SendMessageData {
+  mailerId: number;
+  phone: Phone;
+  text: string;
+}
 mailerRoutes.post("/message", async (req, res) => {
   const data = req.body as SendMessageData;
 
@@ -94,6 +173,11 @@ mailerRoutes.post("/message", async (req, res) => {
   }
 });
 
+export class BroadcastMessage {
+  mailerId: number;
+  phones: Phone[];
+  text: string;
+}
 mailerRoutes.post("/broadcast", async (req, res) => {
   const data = req.body as BroadcastMessage;
 
