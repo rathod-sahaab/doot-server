@@ -14,10 +14,18 @@ import { ApolloServer } from "apollo-server-express";
 const app = express();
 
 @Resolver()
-class HelloResolver {
+class MailerResolver {
   @Query(() => String)
-  async helloWorld() {
-    return "Hello World!";
+  async mailerWorld() {
+    return "Mailer World!";
+  }
+}
+
+@Resolver()
+class CarrierResolver {
+  @Query(() => String)
+  async carrierWorld() {
+    return "Carrier World!";
   }
 }
 
@@ -30,8 +38,17 @@ async function main() {
     entities: [Carrier, CarrierMailer, Mailer, Message],
   });
 
-  const graphqlSchema = await buildSchema({ resolvers: [HelloResolver] });
-  const apolloServer = new ApolloServer({ schema: graphqlSchema });
+  const graphqlMailerSchema = await buildSchema({
+    resolvers: [MailerResolver],
+  });
+  const graphqlCarrierSchema = await buildSchema({
+    resolvers: [CarrierResolver],
+  });
+
+  const apolloMailerServer = new ApolloServer({ schema: graphqlMailerSchema });
+  const apolloCarrierServer = new ApolloServer({
+    schema: graphqlCarrierSchema,
+  });
 
   const PORT = process.env.SEVER_PORT || 3000;
   app.use(express.json());
@@ -40,7 +57,9 @@ async function main() {
 
   // app.use("/mailer", mailerRoutes);
   // app.use("/carrier", carrierRoutes);
-  apolloServer.applyMiddleware({ app });
+
+  apolloMailerServer.applyMiddleware({ app, path: "/mailer" });
+  apolloCarrierServer.applyMiddleware({ app, path: "/carrier" });
 
   app.listen(PORT, () => {
     console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
