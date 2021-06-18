@@ -1,6 +1,6 @@
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { Carrier } from "./Carrier";
-import { Mailer } from "./Mailers";
+import { Mailer } from "./Mailer";
 
 /**
  * Keeps track of relation between carrier and mailer

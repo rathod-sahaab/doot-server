@@ -2,7 +2,7 @@ import { Router } from "express";
 import { getConnection } from "typeorm";
 import { Carrier } from "../entity/Carrier";
 import { CarrierMailer, CarrierMailerRelation } from "../entity/CarrierMailer";
-import { Mailer } from "../entity/Mailers";
+import { Mailer } from "../entity/Mailer";
 import { Message } from "../entity/Message";
 
 const carrierRoutes = Router();

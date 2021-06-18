@@ -2,7 +2,7 @@ import "reflect-metadata";
 import express from "express";
 
 import { createConnection } from "typeorm";
-import { Mailer } from "./entity/Mailers";
+import { Mailer } from "./entity/Mailer";
 import { Carrier } from "./entity/Carrier";
 import { Message } from "./entity/Message";
 // import mailerRoutes from "./routes/mailer-routes";

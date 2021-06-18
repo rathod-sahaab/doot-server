@@ -6,7 +6,7 @@ import {
   BaseEntity,
 } from "typeorm";
 import { Carrier } from "./Carrier";
-import { Mailer } from "./Mailers";
+import { Mailer } from "./Mailer";
 import { Phone } from "./embed/Phone";
 
 @Entity()
