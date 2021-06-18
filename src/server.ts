@@ -1,5 +1,5 @@
 import "reflect-metadata";
-// import express from "express";
+import express from "express";
 
 import { createConnection } from "typeorm";
 import { Mailer } from "./entity/Mailers";
@@ -9,9 +9,9 @@ import { Message } from "./entity/Message";
 // import carrierRoutes from "./routes/carrier-routes";
 import { CarrierMailer } from "./entity/CarrierMailer";
 import { Query, Resolver, buildSchema } from "type-graphql";
-import { ApolloServer } from "apollo-server";
+import { ApolloServer } from "apollo-server-express";
 
-// const app = express();
+const app = express();
 
 @Resolver()
 class HelloResolver {
@@ -34,19 +34,17 @@ async function main() {
   const apolloServer = new ApolloServer({ schema: graphqlSchema });
 
   const PORT = process.env.SEVER_PORT || 3000;
-  apolloServer.listen(PORT).then(({ url }) => {
-    console.log(`[+] Server ready at ${url}`);
-  });
-  // app.use(express.json());
+  app.use(express.json());
 
-  // app.get("/", (_, res) => res.send("Hello! from typescript server!"));
+  app.get("/", (_, res) => res.send("Hello! from typescript server!"));
 
   // app.use("/mailer", mailerRoutes);
   // app.use("/carrier", carrierRoutes);
+  apolloServer.applyMiddleware({ app });
 
-  // app.listen(PORT, () => {
-  //   console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
-  // });
+  app.listen(PORT, () => {
+    console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
+  });
 }
 
 main();
