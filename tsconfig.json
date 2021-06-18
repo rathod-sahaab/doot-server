@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es6",
+    "target": "es2018",
+    "lib": ["es2018", "esnext.asynciterable"],
     "module": "commonjs",
     "rootDir": "./",
     "outDir": "./build",
