@@ -2,32 +2,15 @@ import "reflect-metadata";
 import express from "express";
 
 import { createConnection } from "typeorm";
-import { Mailer } from "./entity/Mailer";
-import { Carrier } from "./entity/Carrier";
-import { Message } from "./entity/Message";
 // import mailerRoutes from "./routes/mailer-routes";
 // import carrierRoutes from "./routes/carrier-routes";
-import { CarrierMailer } from "./entity/CarrierMailer";
-import { Query, Resolver, buildSchema } from "type-graphql";
+import { Carrier, CarrierMailer, Mailer, Message } from "./entity";
+import { buildSchema } from "type-graphql";
 import { ApolloServer } from "apollo-server-express";
+import { MailerCrudResolver } from "./resolvers/mailer";
+import { CarrierCrudResolver } from "./resolvers/carrier";
 
 const app = express();
-
-@Resolver()
-class MailerResolver {
-  @Query(() => String)
-  async mailerWorld() {
-    return "Mailer World!";
-  }
-}
-
-@Resolver()
-class CarrierResolver {
-  @Query(() => String)
-  async carrierWorld() {
-    return "Carrier World!";
-  }
-}
 
 async function main() {
   await createConnection({
@@ -39,10 +22,10 @@ async function main() {
   });
 
   const graphqlMailerSchema = await buildSchema({
-    resolvers: [MailerResolver],
+    resolvers: [MailerCrudResolver],
   });
   const graphqlCarrierSchema = await buildSchema({
-    resolvers: [CarrierResolver],
+    resolvers: [CarrierCrudResolver],
   });
 
   const apolloMailerServer = new ApolloServer({ schema: graphqlMailerSchema });
