@@ -1,3 +1,4 @@
+import { Field, ObjectType } from "type-graphql";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -9,11 +10,14 @@ import { CarrierMailer } from "./CarrierMailer";
 import { Timestamps } from "./embed/Timestamps";
 import { Message } from "./Message";
 
+@ObjectType()
 @Entity()
 export class Carrier extends BaseEntity {
+  @Field()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Field()
   @Column({ unique: true })
   username: string;
 

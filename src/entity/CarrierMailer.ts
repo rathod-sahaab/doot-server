@@ -1,10 +1,17 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
+} from "typeorm";
 import { Carrier } from "./Carrier";
 import { Mailer } from "./Mailer";
 
 /**
  * Keeps track of relation between carrier and mailer
- * Think something like facebooks friend request
+ * Think something like facebook's friend requests
  */
 export enum CarrierMailerRelation {
   /**
@@ -47,10 +54,12 @@ export class CarrierMailer extends BaseEntity {
   @ManyToOne(() => Carrier, (carrier) => carrier.mailerConnection, {
     primary: true,
   })
+  @JoinColumn({ name: "carrierId" })
   carrier: Carrier;
 
   @ManyToOne(() => Mailer, (mailer) => mailer.carrierConnection, {
     primary: true,
   })
+  @JoinColumn({ name: "mailerId" })
   mailer: Mailer;
 }
