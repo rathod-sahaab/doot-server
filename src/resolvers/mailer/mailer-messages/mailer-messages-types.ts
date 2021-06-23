@@ -19,3 +19,12 @@ export class SendMessageInput {
   @Field()
   phone: PhoneInput;
 }
+
+@InputType()
+export class BroadcastInput {
+  @Field()
+  text: String;
+
+  @Field(() => [PhoneInput])
+  phones: PhoneInput[];
+}
