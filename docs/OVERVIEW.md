@@ -36,7 +36,7 @@ Phone -. SMS .-> Destination(Destination or Recipient)
 
 ## Techstack
 
-I started this project as a small personal project so my decision are hugely effected by my opinions.
+I started this project as a small personal project so my decisions are hugely effected by my opinions.
 
 - **NodeJS** <br/>
   Non-blocking I/O, simple to use, interpreted hence easier to develop on weak hardware. I wrote an API server in Rust once which took a long time to compile on my weak PC, hence interpreted is a plus for rapid development in my case.
@@ -57,3 +57,6 @@ I started this project as a small personal project so my decision are hugely eff
 
 - **TypeGraphQL** <br/>
   TypeGraphQL enabled type checking and reusing the TypeORM model for generating GraphQL schema. Also it's easy to do validation of data.
+
+- **JWT based auth**
+  Another option was random-id sessions using redis or any other in memory database. I planned to deploy the app on a low powered machine 512MB-1GB RAM single core processor and adding another process (redis) would not be good for performance. JWT on other hand is stateless mostly and easy on RAM.
