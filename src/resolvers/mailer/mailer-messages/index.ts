@@ -1,1 +1,1 @@
-export { MailerMessagesResolver } from "./mailer-messages-resolver";
+export { MailerMessagesResolver } from "./mailer-messages.resolver";

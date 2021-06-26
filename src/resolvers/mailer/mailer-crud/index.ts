@@ -1,1 +1,1 @@
-export { MailerCrudResolver } from "./mailer-crud-resolver";
+export { MailerCrudResolver } from "./mailer-crud.resolver";

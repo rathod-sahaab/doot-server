@@ -2,7 +2,7 @@ import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { Message } from "../../../entity";
 import { Phone } from "../../../entity/embed/Phone";
 import { MyContext } from "../../../utils/types/MyContext";
-import { BroadcastInput, SendMessageInput } from "./mailer-messages-types";
+import { BroadcastInput, SendMessageInput } from "./mailer-messages.types";
 
 @Resolver()
 export class MailerMessagesResolver {

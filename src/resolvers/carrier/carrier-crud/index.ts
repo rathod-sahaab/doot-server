@@ -1,1 +1,1 @@
-export { CarrierCrudResolver } from "./carrier-crud";
+export { CarrierCrudResolver } from "./carrier-crud.resolver";
