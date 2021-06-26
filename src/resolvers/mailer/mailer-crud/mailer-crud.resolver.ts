@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Arg, Ctx } from "type-graphql";
 import { Mailer } from "../../../entity";
-import { MailerLoginInput, MailerRegisterInput } from "./mailer-crud-types";
+import { MailerLoginInput, MailerRegisterInput } from "./mailer-crud.types";
 import * as bcrypt from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { MyContext } from "../../../utils/types/MyContext";

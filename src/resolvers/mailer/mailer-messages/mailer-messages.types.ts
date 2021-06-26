@@ -20,6 +20,7 @@ export class SendMessageInput {
   phone: PhoneInput;
 }
 
+@InputType()
 export class BatchMessageInput {
   @Field(() => [SendMessageInput])
   messages: SendMessageInput[];
