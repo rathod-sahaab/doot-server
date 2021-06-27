@@ -4,6 +4,8 @@ import { MailerLoginInput, MailerRegisterInput } from "./mailer-crud.types";
 import * as bcrypt from "bcryptjs";
 import { sign } from "jsonwebtoken";
 import { MyContext } from "../../../utils/types/MyContext";
+import { createMailerTokens } from "../../../utils/functions/createTokens";
+import { COOKIE_VARS } from "../../../utils/constants";
 
 @Resolver()
 export class MailerCrudResolver {
@@ -48,26 +50,37 @@ export class MailerCrudResolver {
       return null;
     }
 
-    const refreshToken = sign(
-      { mailerId: mailer.id, count: mailer.count },
-      process.env.MAILER_REFRESH_JWT_KEY!,
-      { expiresIn: "7d" }
-    );
-    const accessToken = sign(
-      { mailerId: mailer.id },
-      process.env.MAILER_ACCESS_JWT_KEY!,
-      { expiresIn: "15m" }
-    );
+    const { accessToken, refreshToken } = createMailerTokens(mailer);
 
-    ctx.res.cookie("refresh-token", refreshToken, {
+    const mailer_cookie = COOKIE_VARS.mailer;
+
+    ctx.res.cookie(mailer_cookie.refresh.name, refreshToken, {
       httpOnly: true,
-      maxAge: 7 * 24 * 3600 * 1000, // mili seconds
+      maxAge: mailer_cookie.refresh.maxAge.ms, // mili seconds
     });
-    ctx.res.cookie("access-token", accessToken, {
+    ctx.res.cookie(mailer_cookie.access.name, accessToken, {
       httpOnly: true,
-      maxAge: 15 * 60 * 1000, // mili seconds
+      maxAge: mailer_cookie.access.maxAge.ms, // mili seconds
     });
 
     return mailer;
+  }
+
+  @Mutation()
+  async invalidateTokens(@Ctx() ctx: MyContext): Promise<boolean> {
+    const mailerId = ctx.req.mailerId;
+    if (!mailerId) {
+      return false;
+    }
+
+    const mailer = await Mailer.findOne(mailerId);
+    if (!mailer) {
+      return false;
+    }
+
+    mailer.count = mailer.count + 1;
+    await mailer.save();
+
+    return true;
   }
 }

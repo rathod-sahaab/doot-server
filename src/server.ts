@@ -9,7 +9,7 @@ import { ApolloServer } from "apollo-server-express";
 import { MailerCrudResolver, MailerMessagesResolver } from "./resolvers/mailer";
 import { CarrierCrudResolver } from "./resolvers/carrier";
 import { formatApolloError } from "./utils/functions/formatApolloError";
-import { JwtPayload, verify } from "jsonwebtoken";
+import { mailerJwtMiddleware } from "./middlewares/mailerJwt.middleware";
 
 const app = express();
 
@@ -45,14 +45,7 @@ async function main() {
   app.use(express.json());
   app.use(cookieParser());
 
-  app.use((req, _, next) => {
-    const accessToken = req.cookies["access-token"];
-    try {
-      const data = verify(accessToken, process.env.MAILER_ACCESS_JWT_KEY!);
-      (req as any).mailerId = (data as JwtPayload).mailerId;
-    } catch {}
-    next();
-  });
+  app.use("/mailer", mailerJwtMiddleware);
 
   app.get("/", (_, res) => res.send("Hello! from typescript server!"));
 
