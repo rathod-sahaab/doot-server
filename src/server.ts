@@ -10,6 +10,7 @@ import { MailerCrudResolver, MailerMessagesResolver } from "./resolvers/mailer";
 import { CarrierCrudResolver } from "./resolvers/carrier";
 import { formatApolloError } from "./utils/functions/formatApolloError";
 import { mailerJwtMiddleware } from "./middlewares/mailerJwt.middleware";
+import { carrierJwtMiddleware } from "./middlewares/carrierJwt.middleware";
 
 const app = express();
 
@@ -45,12 +46,15 @@ async function main() {
   app.use(express.json());
   app.use(cookieParser());
 
-  app.use("/mailer", mailerJwtMiddleware);
 
-  app.get("/", (_, res) => res.send("Hello! from typescript server!"));
+
+  app.use("/mailer", mailerJwtMiddleware);
+  app.use("/carrier", carrierJwtMiddleware);
 
   apolloMailerServer.applyMiddleware({ app, path: "/mailer" });
   apolloCarrierServer.applyMiddleware({ app, path: "/carrier" });
+
+  app.get("/", (_, res) => res.send("Hello! from typescript server!"));
 
   const PORT = process.env.SEVER_PORT || 3000;
   app.listen(PORT, () => {

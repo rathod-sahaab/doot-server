@@ -21,6 +21,16 @@ export class Carrier extends BaseEntity {
   @Column({ unique: true })
   username: string;
 
+  @Field()
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  passwordHash: string;
+
+  @Column({ type: "integer", default: 0 })
+  count: number;
+
   /**
    * Stores the messages sent by the carrier
    */
