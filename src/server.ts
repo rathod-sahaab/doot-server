@@ -6,8 +6,15 @@ import { createConnection } from "typeorm";
 import { Carrier, CarrierMailer, Mailer, Message } from "./entity";
 import { buildSchema } from "type-graphql";
 import { ApolloServer } from "apollo-server-express";
-import { MailerCrudResolver, MailerMessagesResolver } from "./resolvers/mailer";
-import { CarrierCrudResolver } from "./resolvers/carrier";
+import {
+  MailerCrudResolver,
+  MailerMessagesResolver,
+  MailerRelationsResolver,
+} from "./resolvers/mailer";
+import {
+  CarrierCrudResolver,
+  CarrierRelationsResolver,
+} from "./resolvers/carrier";
 import { formatApolloError } from "./utils/functions/formatApolloError";
 import { mailerJwtMiddleware } from "./middlewares/mailerJwt.middleware";
 import { carrierJwtMiddleware } from "./middlewares/carrierJwt.middleware";
@@ -23,36 +30,38 @@ async function main() {
     entities: [Carrier, CarrierMailer, Mailer, Message],
   });
 
-  const graphqlMailerSchema = await buildSchema({
-    resolvers: [MailerCrudResolver, MailerMessagesResolver],
+  const mailerGraphqlSchema = await buildSchema({
+    resolvers: [
+      MailerCrudResolver,
+      MailerMessagesResolver,
+      MailerRelationsResolver,
+    ],
   });
-  const graphqlCarrierSchema = await buildSchema({
-    resolvers: [CarrierCrudResolver],
+  const carrierGraphqlSchema = await buildSchema({
+    resolvers: [CarrierCrudResolver, CarrierRelationsResolver],
   });
 
-  const apolloMailerServer = new ApolloServer({
-    schema: graphqlMailerSchema,
+  const mailerApolloServer = new ApolloServer({
+    schema: mailerGraphqlSchema,
     formatError: formatApolloError,
     context: ({ req, res }: any) => ({
       req,
       res,
     }),
   });
-  const apolloCarrierServer = new ApolloServer({
-    schema: graphqlCarrierSchema,
+  const carrierApolloServer = new ApolloServer({
+    schema: carrierGraphqlSchema,
     formatError: formatApolloError,
   });
 
   app.use(express.json());
   app.use(cookieParser());
 
-
-
   app.use("/mailer", mailerJwtMiddleware);
   app.use("/carrier", carrierJwtMiddleware);
 
-  apolloMailerServer.applyMiddleware({ app, path: "/mailer" });
-  apolloCarrierServer.applyMiddleware({ app, path: "/carrier" });
+  mailerApolloServer.applyMiddleware({ app, path: "/mailer" });
+  carrierApolloServer.applyMiddleware({ app, path: "/carrier" });
 
   app.get("/", (_, res) => res.send("Hello! from typescript server!"));
 
