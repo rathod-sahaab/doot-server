@@ -68,7 +68,7 @@ export class CarrierCrudResolver {
     return carrier;
   }
 
-  @Mutation()
+  @Mutation(() => Boolean)
   async invalidateTokens(@Ctx() ctx: MyContext): Promise<boolean> {
     const carrierId = ctx.req.carrierId;
     if (!carrierId) {

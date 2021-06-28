@@ -52,6 +52,10 @@ async function main() {
   const carrierApolloServer = new ApolloServer({
     schema: carrierGraphqlSchema,
     formatError: formatApolloError,
+    context: ({ req, res }: any) => ({
+      req,
+      res,
+    }),
   });
 
   app.use(express.json());

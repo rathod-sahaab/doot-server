@@ -23,7 +23,7 @@ export const COOKIE_VARS = {
   },
   carrier: {
     refresh: {
-      name: "mailer-refresh-token",
+      name: "carrier-refresh-token",
       maxAge: {
         str: "7d",
         /**
@@ -33,7 +33,7 @@ export const COOKIE_VARS = {
       },
     },
     access: {
-      name: "mailer-access-token",
+      name: "carrier-access-token",
       maxAge: {
         str: "15m",
         /**

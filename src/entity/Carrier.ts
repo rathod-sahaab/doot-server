@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -13,7 +13,7 @@ import { Message } from "./Message";
 @ObjectType()
 @Entity()
 export class Carrier extends BaseEntity {
-  @Field()
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
 

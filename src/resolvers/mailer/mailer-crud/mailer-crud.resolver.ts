@@ -5,6 +5,7 @@ import * as bcrypt from "bcryptjs";
 import { MyContext } from "../../../utils/types/MyContext";
 import { createMailerTokens } from "../../../utils/functions/createTokens";
 import { COOKIE_VARS } from "../../../utils/constants";
+import { GraphQLBoolean } from "graphql";
 
 @Resolver()
 export class MailerCrudResolver {
@@ -65,7 +66,7 @@ export class MailerCrudResolver {
     return mailer;
   }
 
-  @Mutation()
+  @Mutation(() => GraphQLBoolean)
   async invalidateTokens(@Ctx() ctx: MyContext): Promise<boolean> {
     const mailerId = ctx.req.mailerId;
     if (!mailerId) {

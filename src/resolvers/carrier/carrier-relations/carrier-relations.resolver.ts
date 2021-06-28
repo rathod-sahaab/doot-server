@@ -9,7 +9,7 @@ export class CarrierRelationsResolver {
   /**
    * Send a 'friend' request to mailer
    */
-  @Mutation()
+  @Mutation(() => Boolean)
   async addMailer(
     @Arg("data") { username }: AddMailerInput,
     @Ctx() ctx: MyContext
@@ -32,7 +32,7 @@ export class CarrierRelationsResolver {
     return true;
   }
 
-  @Mutation()
+  @Mutation(() => Boolean)
   async removeMailer(
     @Arg("data") { username }: AddMailerInput,
     @Ctx() ctx: MyContext
@@ -63,7 +63,7 @@ export class CarrierRelationsResolver {
     return true;
   }
 
-  @Mutation()
+  @Mutation(() => Boolean)
   async blockMailer(
     @Arg("data") { username }: AddMailerInput,
     @Ctx() ctx: MyContext
@@ -105,7 +105,8 @@ export class CarrierRelationsResolver {
 
     return true;
   }
-  @Mutation()
+
+  @Mutation(() => Boolean)
   async unblockMailer(
     @Arg("data") { username }: AddMailerInput,
     @Ctx() ctx: MyContext

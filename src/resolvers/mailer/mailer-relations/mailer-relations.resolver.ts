@@ -21,7 +21,7 @@ export class MailerRelationsResolver {
     });
   }
 
-  @Mutation()
+  @Mutation(() => Boolean, { nullable: true })
   async acceptConnectionRequest(
     @Arg("data") { carrierId }: AddConnectionInput,
     @Ctx() ctx: MyContext

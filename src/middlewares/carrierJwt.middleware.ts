@@ -19,9 +19,9 @@ export const carrierJwtMiddleware = async (
   try {
     const data = verify(
       accessToken,
-      process.env.MAILER_ACCESS_JWT_KEY!
+      process.env.CARRIER_ACCESS_JWT_KEY!
     ) as JwtPayload;
-    (req as any).mailerId = data.mailerId;
+    (req as any).carrierId = data.carrierId;
     return next();
   } catch {}
 
@@ -29,12 +29,12 @@ export const carrierJwtMiddleware = async (
   try {
     data = verify(
       accessToken,
-      process.env.MAILER_ACCESS_JWT_KEY!
+      process.env.CARRIER_ACCESS_JWT_KEY!
     ) as JwtPayload;
   } catch {
     return next();
   }
-  const carrier = await Carrier.findOne(data!.mailerId);
+  const carrier = await Carrier.findOne(data!.carrierId);
 
   if (!carrier || carrier.count != data!.count) {
     console.log("Count different!");
