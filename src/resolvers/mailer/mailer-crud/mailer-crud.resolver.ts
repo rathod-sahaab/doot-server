@@ -67,6 +67,13 @@ export class MailerCrudResolver {
   }
 
   @Mutation(() => GraphQLBoolean)
+  async logout(@Ctx() ctx: MyContext): Promise<boolean> {
+    ctx.res.clearCookie(COOKIE_VARS.mailer.access.name);
+    ctx.res.clearCookie(COOKIE_VARS.mailer.refresh.name);
+    return true;
+  }
+
+  @Mutation(() => GraphQLBoolean)
   async invalidateTokens(@Ctx() ctx: MyContext): Promise<boolean> {
     const mailerId = ctx.req.mailerId;
     if (!mailerId) {
