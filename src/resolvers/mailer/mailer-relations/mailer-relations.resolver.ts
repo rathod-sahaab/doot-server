@@ -12,13 +12,12 @@ export class MailerRelationsResolver {
     if (!mailerId) {
       return null;
     }
-    return await CarrierMailer.find({
-      where: {
-        mailerId,
-        relationStatus: CarrierMailerRelation.REQUEST_BY_CARRIER,
-      },
-      select: ["carrier"],
-    });
+
+    return await CarrierMailer.query(`
+SELECT carrier.*
+FROM carrier_mailer inner join carrier on carrier_mailer."carrierId" = carrier.id
+where carrier_mailer."mailerId" = ${mailerId} and carrier_mailer."relationStatus" = '${CarrierMailerRelation.REQUEST_BY_CARRIER.toString()}';
+`);
   }
 
   @Mutation(() => Boolean, { nullable: true })
@@ -26,7 +25,7 @@ export class MailerRelationsResolver {
     @Arg("data") { carrierId }: AddConnectionInput,
     @Ctx() ctx: MyContext
   ): Promise<boolean | null> {
-    const mailerId = !ctx.req.mailerId;
+    const mailerId = ctx.req.mailerId;
     if (!mailerId) {
       // not logged in
       return null;
