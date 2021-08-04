@@ -14,6 +14,7 @@ import {
 import {
   CarrierCrudResolver,
   CarrierRelationsResolver,
+  CarrierMessagesResolver,
 } from "./resolvers/carrier";
 import { formatApolloError } from "./utils/functions/formatApolloError";
 import { mailerJwtMiddleware } from "./middlewares/mailerJwt.middleware";
@@ -38,7 +39,11 @@ async function main() {
     ],
   });
   const carrierGraphqlSchema = await buildSchema({
-    resolvers: [CarrierCrudResolver, CarrierRelationsResolver],
+    resolvers: [
+      CarrierCrudResolver,
+      CarrierRelationsResolver,
+      CarrierMessagesResolver,
+    ],
   });
 
   const mailerApolloServer = new ApolloServer({

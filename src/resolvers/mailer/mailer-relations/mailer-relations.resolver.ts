@@ -30,7 +30,12 @@ where carrier_mailer."mailerId" = ${mailerId} and carrier_mailer."relationStatus
       // not logged in
       return null;
     }
-    const carrierMailer = await CarrierMailer.findOne({ carrierId });
+
+    const carrierMailer = await CarrierMailer.findOne({
+      carrierId,
+      mailerId,
+      relationStatus: CarrierMailerRelation.REQUEST_BY_CARRIER,
+    });
     if (!carrierMailer) {
       return false;
     }
