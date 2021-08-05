@@ -1,9 +1,11 @@
-import { Ctx, Query, Resolver } from "type-graphql";
+import { GraphQLBoolean } from "graphql";
+import { Ctx, Query, Mutation, Resolver, Arg } from "type-graphql";
 import { getConnection } from "typeorm";
 import { Carrier, Message } from "../../../entity";
 import { CarrierMailerRelation } from "../../../entity/CarrierMailer";
 import { Phone } from "../../../entity/embed/Phone";
 import { MyContext } from "../../../utils/types/MyContext";
+import { MarkMessagesSentInput } from "./carrier-messages.types";
 
 @Resolver()
 export class CarrierMessagesResolver {
@@ -46,5 +48,26 @@ carrier_mailer."relationStatus" = '${CarrierMailerRelation.CONNECTED.toString()}
     );
 
     return messages;
+  }
+
+  @Mutation(() => GraphQLBoolean, { nullable: true })
+  async markMessagesSent(
+    @Arg("data") { messageIds }: MarkMessagesSentInput,
+    @Ctx() ctx: MyContext
+  ): Promise<boolean | null> {
+    const carrierId = ctx.req.carrierId;
+    if (!carrierId) {
+      return null;
+    }
+
+    // TODO: Check if carrier was allowed to send that message, and is related to the mailer that created the message
+    await getConnection()
+      .createQueryBuilder()
+      .update(Message)
+      .whereInIds(messageIds)
+      .set({ sent: true })
+      .execute();
+
+    return true;
   }
 }
