@@ -28,8 +28,8 @@ export const carrierJwtMiddleware = async (
   let data: JwtPayload;
   try {
     data = verify(
-      accessToken,
-      process.env.CARRIER_ACCESS_JWT_KEY!
+      refreshToken,
+      process.env.CARRIER_REFRESH_JWT_KEY!
     ) as JwtPayload;
   } catch {
     return next();

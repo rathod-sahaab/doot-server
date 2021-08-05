@@ -28,8 +28,8 @@ export const mailerJwtMiddleware = async (
   let data: JwtPayload;
   try {
     data = verify(
-      accessToken,
-      process.env.MAILER_ACCESS_JWT_KEY!
+      refreshToken,
+      process.env.MAILER_REFRESH_JWT_KEY!
     ) as JwtPayload;
   } catch {
     return next();
