@@ -9,12 +9,12 @@ import {
 import { Carrier } from "./Carrier";
 import { Mailer } from "./Mailer";
 import { Phone } from "./embed/Phone";
-import { Field, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 
 @Entity()
 @ObjectType()
 export class Message extends BaseEntity {
-  @Field()
+  @Field(() => ID)
   @PrimaryGeneratedColumn()
   id: number;
 
