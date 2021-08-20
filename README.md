@@ -2,19 +2,21 @@
 
 This server enables you to send SMS through your phone from using a simple GraphQL API.
 
+For a more detailed overview see [docs/OVERVIEW.md](./docs/OVERVIEW.md)
+
+## Status
+
+Currently, there is no mobile app that can be used with this API but, an android application
+is in the works. However, you can still test out the server.
+
 ## Usage
 
 Send a message using a simple graphql mutation
+
 ```graphql
 mutation {
   sendMessage(
-    data: {
-      phone: {
-        num: "1234567890",
-        country: 91
-      },
-      text: "Hello"
-    }
+    data: { phone: { num: "1234567890", country: 91 }, text: "Hello" }
   ) {
     id
   }
@@ -22,6 +24,7 @@ mutation {
 ```
 
 successful response
+
 ```js
 {
   "data": {
@@ -31,6 +34,10 @@ successful response
   }
 }
 ```
+
+More details on usage
+
+- [Mailer API](./docs/MAILER_API.md)
 
 ## Develop
 
@@ -64,8 +71,8 @@ This will start a development server at `http://localhost:3000`.
 
 On changes to code in `src` directory the nodemon will restart your server with changes.
 
-
 ### Experience
+
 - To access mailer API go to `http://localhost:3000/mailer`
 - To access carrier API go to `http://localhost:3000/carrier`
 
