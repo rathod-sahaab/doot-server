@@ -1,6 +1,36 @@
 # Doot SMS server
 
-This server enables you to send SMS through your phone from using a simple REST API.
+This server enables you to send SMS through your phone from using a simple GraphQL API.
+
+## Usage
+
+Send a message using a simple graphql mutation
+```graphql
+mutation {
+  sendMessage(
+    data: {
+      phone: {
+        num: "1234567890",
+        country: 91
+      },
+      text: "Hello"
+    }
+  ) {
+    id
+  }
+}
+```
+
+successful response
+```js
+{
+  "data": {
+    "sendMessage": {
+      "id": "9"
+    }
+  }
+}
+```
 
 ## Develop
 
@@ -33,3 +63,10 @@ yarn develop
 This will start a development server at `http://localhost:3000`.
 
 On changes to code in `src` directory the nodemon will restart your server with changes.
+
+
+### Experience
+- To access mailer API go to `http://localhost:3000/mailer`
+- To access carrier API go to `http://localhost:3000/carrier`
+
+This will open a **GraphQL Playground** instance where you can test and perfect your `querys and mutations`.
