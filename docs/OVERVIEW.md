@@ -15,13 +15,20 @@ You can use the GraphQL API to send commands to the service.
 
 Flowchart of how messages are sent(simplified).
 
+<img src="./images/flow.png" height="500px"/>
+
+
+<!--
 ```mermaid
 %%{init: {'theme':'base'}}%%
 graph TD;
-Mailer(You i.e. Mailer) -- Message --> Service(Service)
-Service -- Message --> Phone(Phone i.e. Carrier)
+Mailer(You i.e. Mailer) -- Message -- Service(Service)
+Service -- Message -- Phone(Phone i.e. Carrier)
 Phone -. SMS .-> Destination(Destination or Recipient)
 ```
+-->
+
+
 
 ## Workflow
 
