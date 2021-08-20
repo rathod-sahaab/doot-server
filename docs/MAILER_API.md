@@ -20,7 +20,7 @@ mutation {
 
 Send same message to multiple phones
 
-```
+```graphql
 mutation {
   broadcast(
     data : {
@@ -50,7 +50,7 @@ mutation {
 
 Works like `sendMessage` but is used to avoid many network calls if multiple numbers have to be messaged different messages.
 
-````graphql
+```graphql
 mutation {
   batchMessages(
     data: {
